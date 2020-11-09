@@ -5,7 +5,7 @@ metadata:
 spec:
   containers:
   - name: nagios-retriever
-    image: mmaschenk/nagios-retriever:1.0
+    image: mmaschenk/nagios-retriever:1.1
     envFrom:
     - secretRef:
         name: passwords

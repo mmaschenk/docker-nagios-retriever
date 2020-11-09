@@ -59,5 +59,5 @@ def get_nagios_stats(url, user, password):
 if __name__ == "__main__":
     while True:
         get_nagios_stats(nagiosurl, nagiosuser, nagiospassword)
-        print("\nSleeping for {} seconds\n".format(measureinterval))
+        print("\nSleeping for {} seconds\n".format(measureinterval), flush=True)
         time.sleep(measureinterval)

@@ -11,7 +11,7 @@ mqrabbit_user = os.getenv("MQRABBIT_USER")
 mqrabbit_password = os.getenv("MQRABBIT_PASSWORD")
 
 mqrabbit_host = os.getenv("MQRABBIT_HOST")
-mqrabbit_vhost = os.getenv("MQRABBIT_VHOST")
+mqrabbit_vhost = os.getenv("MQRABBIT_VHOST", "/")
 mqrabbit_port = os.getenv("MQRABBIT_PORT")
 mqrabbit_exchange = os.getenv("MQRABBIT_EXCHANGE")
 mqrabbit_queue = os.getenv("MQRABBIT_QUEUE")
@@ -19,6 +19,8 @@ mqrabbit_queue = os.getenv("MQRABBIT_QUEUE")
 nagiosurl = os.getenv("NAGIOS_URL")
 nagiosuser = os.getenv("NAGIOS_USER")
 nagiospassword = os.getenv("NAGIOS_PASSWORD")
+
+verbose = os.getenv("VERBOSE", "False").lower() == "true"
 
 measureinterval = int(os.getenv("MEASURE_INTERVAL", "60"))
 
@@ -44,20 +46,17 @@ def get_nagios_stats(url, user, password):
     response = requests.get(url, auth=(user, password))
     nagiosresult = response.json()
     servicelist = nagiosresult['data']['servicelist']
-    #print(nagiosresult['data']['servicelist'])
+    numservices = 0
     for key, services in servicelist.items():
-        #print(key)
         for servicename, status in services.items():
-            #print(servicename)
-            print(status)
-            #print("Measured status [{0}] for [{1} @ {2}]".format(status['status'], status['description'], status['host_name']))
+            if verbose:
+                print(status)
             channel.basic_publish(exchange=mqrabbit_exchange, routing_key='', body=json.dumps(status))
+            numservices += 1
+    print("Pushed {0} statuses to the queue".format(numservices))
 
 
 if __name__ == "__main__":
-    #get_nagios_stats(
-    #    'https://nagios.markschenk.nl/nagios/cgi-bin/statusjson.cgi?query=servicelist&details=true&dateformat=%25Y-%25m-%25dT%25H%3A%25M%3A%25S.%25f', 
-    #    'nagiosadmin', 'gIjlBcktcEmPExDtS7bR')
     while True:
         get_nagios_stats(nagiosurl, nagiosuser, nagiospassword)
         print("\nSleeping for {} seconds\n".format(measureinterval))

@@ -36,10 +36,10 @@ channel = mqconnection.channel()
 
 channel.exchange_declare(exchange=mqrabbit_exchange, exchange_type='fanout')
 
-message = ' '.join(sys.argv[1:]) or "Hello World!"
-aa = channel.basic_publish(exchange=mqrabbit_exchange, routing_key='', body=message)
-print(" [x] Sent %r" % message)
-print(aa)
+#message = ' '.join(sys.argv[1:]) or "Hello World!"
+#aa = channel.basic_publish(exchange=mqrabbit_exchange, routing_key='', body=message)
+#print(" [x] Sent %r" % message)
+#print(aa)
 
 
 

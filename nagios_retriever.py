@@ -46,13 +46,15 @@ def get_nagios_stats(url, user, password):
     response = requests.get(url, auth=(user, password))
     nagiosresult = response.json()
     servicelist = nagiosresult['data']['servicelist']
+    outputlist = []
     numservices = 0
     for key, services in servicelist.items():
         for servicename, status in services.items():
             if verbose:
                 print(status)
-            channel.basic_publish(exchange=mqrabbit_exchange, routing_key='', body=json.dumps(status))
+            outputlist.append(status)
             numservices += 1
+    channel.basic_publish(exchange=mqrabbit_exchange, routing_key='', body=json.dumps(outputlist))
     print("Pushed {0} statuses to the queue".format(numservices))
 
 

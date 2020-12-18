@@ -62,6 +62,9 @@ def get_nagios_stats(url, user, password):
 if __name__ == "__main__":
     while True:
         try:
+            mqconnection = pika.BlockingConnection(mqparameters)
+            channel = mqconnection.channel()
+            channel.exchange_declare(exchange=mqrabbit_exchange, exchange_type='fanout')
             get_nagios_stats(nagiosurl, nagiosuser, nagiospassword)
             print("\nSleeping for {} seconds\n".format(measureinterval), flush=True)
             time.sleep(measureinterval)

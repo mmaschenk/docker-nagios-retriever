@@ -5,6 +5,7 @@ import pika
 import time
 import json
 import requests
+import traceback
 from requests.auth import HTTPBasicAuth
 
 mqrabbit_user = os.getenv("MQRABBIT_USER")
@@ -60,6 +61,15 @@ def get_nagios_stats(url, user, password):
 
 if __name__ == "__main__":
     while True:
-        get_nagios_stats(nagiosurl, nagiosuser, nagiospassword)
-        print("\nSleeping for {} seconds\n".format(measureinterval), flush=True)
-        time.sleep(measureinterval)
+        try:
+            get_nagios_stats(nagiosurl, nagiosuser, nagiospassword)
+            print("\nSleeping for {} seconds\n".format(measureinterval), flush=True)
+            time.sleep(measureinterval)
+        except Exception as e:
+            print("Exception in main loop")
+            print("[Exception]: {0}".format(getattr(e, 'message', repr(e))))
+            stack = traceback.format_stack()
+            for l in stack:
+                for sl in l.split('\n')[:-1]:
+                    print("[Exception]: {0}".format(sl))
+            print("[Exception] Restarting main loop")       

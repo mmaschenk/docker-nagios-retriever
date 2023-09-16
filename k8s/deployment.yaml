@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: nagios-retriever
-        image: mmaschenk/nagios-retriever:1.4
+        image: ghcr.io/mmaschenk/docker-nagios-retriever:1.5
         envFrom:
         - secretRef:
             name: passwords

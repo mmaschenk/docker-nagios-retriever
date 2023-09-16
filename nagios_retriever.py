@@ -15,7 +15,6 @@ mqrabbit_host = os.getenv("MQRABBIT_HOST")
 mqrabbit_vhost = os.getenv("MQRABBIT_VHOST", "/")
 mqrabbit_port = os.getenv("MQRABBIT_PORT")
 mqrabbit_exchange = os.getenv("MQRABBIT_EXCHANGE")
-mqrabbit_queue = os.getenv("MQRABBIT_QUEUE")
 
 nagiosurl = os.getenv("NAGIOS_URL")
 nagiosuser = os.getenv("NAGIOS_USER")
